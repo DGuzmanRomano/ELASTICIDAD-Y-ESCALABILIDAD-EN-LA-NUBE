@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="mt-4 mb-5">Survey</h1>
+      <form action="/" method="post" class="mb-5">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" name="name" id="name" class="form-control" required>
+        </div>
+        
+        {% for question in questions %}
+          <div class="card mb-4">
+            <div class="card-header">{{ question[1] }}</div>
+            <div class="card-body">
+              {% for option in question[2].split(', ') %}
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="{{ question[0] }}" id="{{ option }}" value="{{ option }}">
+                  <label class="form-check-label" for="{{ option }}">{{ option }}</label>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endfor %}
+        
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+      <form action="/simulate-load" method="post">
+        <button type="submit" class="btn btn-danger">Simulate High CPU Load</button>
+      </form>
+    </div>
+    
+   <script src="{{ url_for('static', filename='jquery/jquery-3.7.0.min.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+    
+    <script>
+      $(document).ready(function() {
+        $('#simulateBtn').click(function() {
+          $(this).prop('disabled', true);
+          $('#progress').show();
+
+          simulateLoad();
+        });
+
+        function simulateLoad() {
+          $.ajax({
+            url: '/simulate-load',
+            type: 'POST',
+            xhr: function() {
+              var xhr = new window.XMLHttpRequest();
+              xhr.upload.addEventListener('progress', function(e) {
+                if (e.lengthComputable) {
+                  var percent = Math.round((e.loaded / e.total) * 100);
+                  $('#progress').text('Progress: ' + percent + '%');
+                }
+              });
+              return xhr;
+            },
+            success: function(response) {
+              $('#progress').text('CPU load simulation complete!');
+            },
+            error: function(xhr, status, error) {
+              $('#progress').text('An error occurred during simulation: ' + error);
+            },
+            complete: function() {
+              $('#simulateBtn').prop('disabled', false);
+            }
+          });
+        }
+      });
+    </script>
+  </body>
+</html>
+

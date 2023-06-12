@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h1>Survey</h1>
+    <form action="/" method="post">
+      {% for question in questions %}
+        <h3>{{ question.question }}</h3>
+        {% for option in question.options %}
+          <input type="radio" name="{{ question.question }}" value="{{ option }}"> {{ option }}<br>
+        {% endfor %}
+        <br>
+      {% endfor %}
+      <button type="submit">Submit</button>
+    </form>
+  </body>
+</html>
+

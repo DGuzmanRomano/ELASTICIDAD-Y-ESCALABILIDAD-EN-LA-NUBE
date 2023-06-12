@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <form action="/" method="post">
+      <input type="text" name="input" placeholder="Enter a value" required>
+      <button type="submit">Submit</button>
+    </form>
+
+    <button id="compute-btn">Compute</button>
+
+    <div id="result-container"></div>
+
+    <script>
+      document.getElementById('compute-btn').addEventListener('click', function() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/compute', true);
+        xhr.onload = function() {
+          if (xhr.status === 200) {
+            var response = JSON.parse(xhr.responseText);
+            var resultContainer = document.getElementById('result-container');
+            resultContainer.innerHTML = 'Result: ' + response.result + '<br>Computation time: ' + response.computation_time + ' seconds.';
+          }
+        };
+        xhr.send();
+      });
+    </script>
+  </body>
+</html>
+
