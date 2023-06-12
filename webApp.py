@@ -13,8 +13,8 @@ mysql = MySQL(app)
 def simulate_load():
     # Simulate high CPU load
     result = 0
-    for i in range(50000):
-        for j in range(50000):
+    for i in range(10000):
+        for j in range(10000):
             result += i * j
 
     return "CPU load simulation complete!"
